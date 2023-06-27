@@ -18,3 +18,62 @@ alias awslc='aws --endpoint-url=http://localhost:4566'
 
 ![Infrastructure Diagram](https://github.com/mdcravero/NUWE-Zurich-Cloud-Hackathon/blob/main/Zurich%20Cloud%20Hackathon%20Diagram.jpg)
 
+In addition to the resources shown in the diagram, we also created a role, policy and an S3 Bucket Notification, which we use to activate the trigger when the file is inserted into the S3.
+
+:information_source: We must convert the file s3_json_dynamodb.py to .zip so that Lambda can use it when deploying the infrastructure.
+
+```bash
+zip s3_json_dynamodb.zip s3_json_dynamodb.py
+```
+
+### List of resourses
+```bash
+aws_iam_role.lambda_iam: Refreshing state... [id=s3_lambda_role]
+aws_s3_bucket.bucket-json: Refreshing state... [id=bucket-json]
+aws_dynamodb_table.client_data: Refreshing state... [id=client_data]
+aws_iam_role_policy.lambda_role_policy: Refreshing state... [id=s3_lambda_role:s3_lambda_policy]
+aws_lambda_function.s3_json_lambda: Refreshing state... [id=lambda_json]
+aws_s3_bucket_notification.aws_lambda_trigger: Refreshing state... [id=bucket-json]
+```
+
+## Lambda Function
+
+```python
+import os
+import boto3
+import json
+import ast
+```
+
+```python
+localstack_host = os.environ['LOCALSTACK_HOSTNAME']
+edge_port = os.environ['EDGE_PORT']
+```
+
+```python
+s3_client = boto3.client("s3", endpoint_url="http://172.17.0.2:4566")
+dynamodb_client = boto3.resource('dynamodb', endpoint_url="http://172.17.0.2:4566")
+```
+
+```python    
+     bucket = event['Records'][0]['s3']['bucket']['name']
+     json_file_name = event['Records'][0]['s3']['object']['key']
+```    
+```python       
+     json_object = s3_client.get_object(Bucket=bucket,Key=json_file_name)
+     file_reader = json_object['Body'].read().decode("utf-8")
+```
+
+We convert the content of a file into a dict, because the input of the method requires an argument in dict.
+```python      
+     file_reader = ast.literal_eval(file_reader)
+```
+
+```python
+     table = dynamodb_client.Table('client_data')
+     if type(file_reader) == type([]):
+        for item in file_reader:
+            table.put_item(Item=item) 
+     else:
+        table.put_item(Item=file_reader) 
+```
