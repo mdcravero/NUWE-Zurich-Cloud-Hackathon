@@ -14,4 +14,7 @@ alias awslc='aws --endpoint-url=http://localhost:4566'
 
 ## Infrastructure created
 
+### Infrastructure Diagram
+
 ![Infrastructure Diagram](https://github.com/mdcravero/NUWE-Zurich-Cloud-Hackathon/blob/main/Zurich%20Cloud%20Hackathon%20Diagram.jpg)
+
