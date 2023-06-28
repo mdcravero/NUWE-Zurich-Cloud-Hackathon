@@ -1,4 +1,3 @@
-# Creating Lambda IAM resource
 resource "aws_iam_role" "lambda_iam" {
   name = var.lambda_role_name
 
