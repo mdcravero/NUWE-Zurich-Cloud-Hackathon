@@ -49,6 +49,7 @@ aws_iam_role_policy.lambda_role_policy: Refreshing state... [id=s3_lambda_role:s
 aws_lambda_function.s3_json_lambda: Refreshing state... [id=lambda_json]
 aws_s3_bucket_notification.aws_lambda_trigger: Refreshing state... [id=bucket-json]
 ```
+>Even if they are not necessary, (in this case) I created a role and a policy to be able to upload and remove objects from the buckets.
 
 Once we have all the infra deployed, we have to upload the .json to the s3 bucket
 ```bash
