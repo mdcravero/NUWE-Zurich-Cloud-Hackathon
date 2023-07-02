@@ -1,5 +1,11 @@
 # NUWE-Zurich-Cloud-Hackathon
 
+## :memo: Objectives:
+
+- Create a Lambda function that automates inserting data into DynamoDB.
+- Create Terraform files to automatically create all the necessary resources.
+- Automate the execution of the Lambda function to be triggered when uploading a JSON file to an s3 Bucket.
+- Create a short README with the infrastructure created and the decisions taken during the process.
 
 ## Decisions taken during the process
 
